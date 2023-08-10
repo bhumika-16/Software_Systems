@@ -1,2 +1,2 @@
-# Software_Systems
+# Software Systems
 Software Systems Lab

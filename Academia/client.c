@@ -1,13 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <arpa/inet.h>
-
+#include "record_struct.h"
 #define PORT 8080
-#define SERVER_IP "127.0.0.1" // Loopback address for testing
+#define SERVER_IP "127.0.0.2" // Loopback address for testing
 
-int main() {
+void client_handle(int socket);
+int main() 
+{
     int client_socket;
     struct sockaddr_in server_addr;
     char message[1024];
@@ -29,24 +26,46 @@ int main() {
         perror("Connection failed");
         exit(EXIT_FAILURE);
     }
-
-    // Send a message to the server
-    const char *client_message = "Hello, server!";
-    send(client_socket, client_message, strlen(client_message), 0);
-    printf("Sent to server: %s\n", client_message);
-
-    // Receive a response from the server
-    ssize_t bytes_received = recv(client_socket, message, sizeof(message), 0);
-    if (bytes_received > 0) {
-        message[bytes_received] = '\0';
-        printf("Received from server: %s\n", message);
-    } else {
-        perror("recv");
-    }
-	scanf(" %[^\n]",message);
+    // Successfully connected to the server
+	printf("Client to server connection successfully established...\n");
+	
+	//Communication with the server
+	client_handle(client_socket);
+	
     // Close the client socket
     close(client_socket);
-
     return 0;
 }
 
+void client_handle(int socket)
+{
+	char buff[1024]; 
+    struct message m;
+    ssize_t readBytes, writeBytes;            
+    char temp_buff[1024];
+
+    do{
+       	memset(buff, 0,sizeof(buff));   
+        memset(m.buff, 0,sizeof(m.buff));
+        readBytes = read(socket,&m, sizeof(m));
+        if (readBytes == -1)
+            perror("Error while reading from client socket!!\n");
+        else if (readBytes == 0)
+            printf("No msg from Portal... Please reload this program\n");        
+        else
+        {
+        	printf("%s",m.buff);
+         	if(m.response==1)
+         	{
+         		//scanf(" %[^\n]", buff); 
+         		memset(buff, 0,sizeof(buff));       		
+        		fgets(buff, sizeof(buff), stdin);
+        		fflush(stdin);
+        		if (strlen(buff) > 0 && buff[strlen(buff) - 1] == '\n')
+            		buff[strlen(buff) - 1] = '\0';
+        		writeBytes = write(socket,buff,strlen(buff)); 
+    		}
+    	}
+     }while (readBytes > 0);
+    close(socket);
+}

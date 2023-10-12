@@ -1,39 +1,68 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <pthread.h>
-#include <arpa/inet.h>
-
+#include "Admin.h"
 #define PORT 8080
 #define MAX_CLIENTS 5
 
 // Function to handle client connections
-void *handle_client(void *arg) 
+void *handle_conn(void *arg) 
 {
-    int client_socket = *((int *)arg);
-    char buffer[1024];
-    ssize_t bytes_received;
+	printf("Client has connected to the server...!\n");
+	int client_socket = *((int *)arg);
+    char buff[1024];
+    struct message m;
+    ssize_t readBytes, writeBytes;
+    int ch;
 
-    // Receive data from the client
-    while ((bytes_received = recv(client_socket, buffer, sizeof(buffer), 0)) > 0) {
-        buffer[bytes_received] = '\0';
-        printf("Received from client: %s\n", buffer);
-
-        // Send an acknowledgment back to the client
-        const char *acknowledgment = "Message received by the server.";
-        send(client_socket, acknowledgment, strlen(acknowledgment), 0);
+   	while(1)
+   	{
+    	memset(m.buff,0,sizeof(m.buff));
+       	strcpy(m.buff,"------------------------------ Welcome to Academia : Course Registration Portal ----------------------------\n\
+Login Type (1.Admin  2.Professor  3.Student) \nPlease enter your login choice: ");
+       	m.response=1;
+       	write(client_socket, &m, sizeof(m));
+       	
+   	   	memset(buff,0,sizeof(buff));
+        readBytes = read(client_socket, buff, sizeof(buff));        
+        if (readBytes == -1)
+            perror("Error while reading from client!!\n");
+        else if (readBytes == 0)
+            printf("Client disconnected: No data was sent by the client...\n");        
+        else
+        {   
+            ch = atoi(buff);
+            switch (ch)
+            {
+            case 1:
+            	memset(m.buff,0,sizeof(m.buff));
+                strcpy(m.buff,"Hello Administrator! Press Enter to continue...\n" );
+        		m.response=1;
+        		write(client_socket, &m, sizeof(m));
+        		admin_operation_handler(client_socket);
+                break;
+            case 2:
+            	memset(m.buff,0,sizeof(m.buff));
+                strcpy(m.buff,"Hello Professor! Press Enter to continue...\n" );
+        		m.response=1;
+        		write(client_socket, &m, sizeof(m));
+                break;
+            case 3:
+            	memset(m.buff,0,sizeof(m.buff));
+                strcpy(m.buff,"Hello Student...\n" );
+        		m.response=1;
+        		write(client_socket, &m, sizeof(m));
+                break;
+            default:
+                // Exit
+                memset(m.buff,0,sizeof(m.buff));
+                strcpy(m.buff,"Invalid choice...\nReopening the application with Login Page...\n" );
+        		m.response=0;
+        		write(client_socket, &m, sizeof(m));
+                break;
+            }
+        }
     }
-
-    // Client disconnected or encountered an error
-    if (bytes_received == 0) {
-        printf("Client disconnected: %d\n", client_socket);
-    } else {
-        perror("recv");
-    }
-
+    printf("Terminating connection to client!\n");
     close(client_socket);
-    pthread_exit(NULL);
+    pthread_exit(NULL);   
 }
 
 int main() {
@@ -78,13 +107,11 @@ int main() {
 
         // Create a new thread to handle the client
         pthread_t tid;
-        pthread_create(&tid, NULL, handle_client, &client_socket);
+        pthread_create(&tid, NULL, handle_conn, &client_socket);
         pthread_detach(tid); // Detach the thread to clean up automatically
     }
 
     // Close the server socket (This part will not be reached in practice)
     close(server_socket);
-
     return 0;
 }
-

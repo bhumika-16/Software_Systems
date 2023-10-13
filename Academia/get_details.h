@@ -60,9 +60,10 @@ bool get_student_details(int connFD, int studentID)
     readlock.l_type = F_UNLCK;
     fcntl(stfd, F_SETLK, &readlock);
     memset(msg.buff, 0,sizeof(msg.buff));
+    char *status = (s.s_active_status)? "Active":"Blocked";
     sprintf(msg.buff, "\n----------------- Student Details -------------------- \n\tID: %d\n\tName: %s\n\tGender : %c\n\tAge: %d\n\tEmail : %s\n\t\
-Contact No.: %s\n\tDegree Enrolled: %s\n\tLoginID : %s\n\tRegistered Courses : %d", s.s_id, s.s_name, s.s_gender, s.s_age, s.s_email, s.s_phone_no,\
-s.s_degree, s.s_login_id, s.num_reg_courses);
+Contact No.: %s\n\tDegree Enrolled: %s\n\tLoginID : %s\n\tAccount Status : %s\n\tRegistered Courses : %d", s.s_id, s.s_name, s.s_gender, s.s_age, s.s_email, s.s_phone_no,\
+s.s_degree, s.s_login_id, status, s.num_reg_courses);
     strcat(msg.buff, "\n\nRedirecting to main menu....\n");
     msg.response=0;
 	write(connFD, &msg, sizeof(msg)); 

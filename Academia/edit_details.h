@@ -441,3 +441,120 @@ bool modify_faculty_details(int connFD)
     write(connFD, &msg, sizeof(msg));
     return true;
 }
+
+
+bool activate_student(int connFD,int status)
+{
+	ssize_t readBytes, writeBytes;
+    char readBuffer[1024];
+    struct message msg;
+    struct student s;
+    int sID, lockingStatus;
+    off_t offset;
+
+    memset(msg.buff, 0,sizeof(msg.buff));
+    strcpy(msg.buff,"Enter Student Id:\n" );
+    msg.response=1;
+    write(connFD, &msg, sizeof(msg));    
+    memset(readBuffer, 0,sizeof(readBuffer));
+    readBytes = read(connFD, readBuffer, sizeof(readBuffer));
+    sID = atoi(readBuffer);
+
+	bool correct = false;
+    int studfd = open("./records/student", O_RDWR);
+    if (studfd == -1 || sID==0)
+    {
+        // Student File doesn't exist       
+        memset(msg.buff, 0,sizeof(msg.buff));
+        strcpy(msg.buff,"No record exists...\n");      
+        msg.response=0;
+        write(connFD, &msg, sizeof(msg));
+        return false;
+    }
+    off_t end=lseek(studfd,0,SEEK_END);
+    offset = lseek(studfd, (sID-1) * sizeof(struct student), SEEK_SET);
+    if (errno == EINVAL ||  end<=offset)
+    {
+        // Student record doesn't exist       
+        memset(msg.buff, 0,sizeof(msg.buff));
+        strcpy(msg.buff, "Given student id doesn't exists!\n");      
+        msg.response=0;
+        write(connFD, &msg, sizeof(msg));
+        return false;
+    }   
+    else if (offset == -1)
+    {
+        perror("Error while seeking to required student record!\n");
+        return false;
+    }
+	struct flock readlock;
+	readlock.l_type = F_RDLCK; 
+	readlock.l_whence = SEEK_SET; 
+	readlock.l_start = offset; 
+	readlock.l_len = sizeof(struct student); 
+	readlock.l_pid = getpid();   
+    lockingStatus = fcntl(studfd, F_SETLKW, &readlock);
+    if (lockingStatus == -1)
+    {
+        perror("Couldn't obtain lock on student record!\n");
+        return false;
+    }
+    memset(readBuffer, 0,sizeof(readBuffer));
+    readBytes = read(studfd, &s, sizeof(struct student));  
+    if(s.s_active_status == status)
+    	correct = true;
+    // Unlock the record
+    readlock.l_type = F_UNLCK;
+    fcntl(studfd, F_SETLK, &readlock);
+    close(studfd);
+    
+    if(correct==false)
+    {
+    	s.s_active_status = status;
+    	studfd = open("./records/student", O_WRONLY);
+		if (studfd == -1)
+		{
+		    perror("Error while opening student file!\n");
+		    return false;
+		}
+		offset = lseek(studfd, (sID-1) * sizeof(struct student), SEEK_SET);
+		if (offset == -1)
+		{
+		    perror("Error while seeking to required student record!");
+		    return false;
+		}
+
+		readlock.l_type = F_WRLCK;
+		readlock.l_start = offset;
+		lockingStatus = fcntl(studfd, F_SETLKW, &readlock);
+		if (lockingStatus == -1)
+		{
+		    perror("Error while obtaining write lock on student record!");
+		    return false;
+		}
+		writeBytes = write(studfd, &s, sizeof(struct student));
+		readlock.l_type = F_UNLCK;
+		fcntl(studfd, F_SETLK, &readlock);
+		close(studfd);
+		
+		memset(msg.buff, 0,sizeof(msg.buff));
+		if(status==1)
+			strcpy(msg.buff,"Student Account Activated!! Redirecting to the main menu...!\n");
+		else
+			strcpy(msg.buff,"Student Account Blocked!! Redirecting to the main menu...!\n");
+		msg.response=0;
+		write(connFD, &msg, sizeof(msg));
+		return true;
+    }    
+    else
+    {
+		memset(msg.buff, 0,sizeof(msg.buff));
+		if(status==1)
+			strcpy(msg.buff,"Student Account is already activated!! Redirecting to the main menu...!\n");
+		else
+			strcpy(msg.buff,"Student Account is already blocked!! Redirecting to the main menu...!\n");
+		msg.response=0;
+		write(connFD, &msg, sizeof(msg));
+	}
+	return true;
+}

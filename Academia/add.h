@@ -92,9 +92,10 @@ int add_student(int connFD)
     
     memset(msg.buff, 0,sizeof(msg.buff));
     strcpy(msg.buff, "\n---------Enter the details of the new student--------\n");
-	strcat(msg.buff, "Enter student's name:\n");
+	strcat(msg.buff, "Enter student's name: ");
     msg.response=1;
     write(connFD, &msg, sizeof(msg));
+    memset(readBuffer, 0,sizeof(readBuffer));
     readBytes = read(connFD, readBuffer, sizeof(readBuffer));
     strcpy(newStudent.s_name, readBuffer);    
     
@@ -259,9 +260,10 @@ int add_faculty(int connFD)
     
     memset(msg.buff, 0,sizeof(msg.buff));
     strcpy(msg.buff, "\n---------Enter the details of the new faculty--------\n");
-	strcat(msg.buff, "Enter faculty's name:\n");
+	strcat(msg.buff, "Enter faculty's name: ");
     msg.response=1;
     write(connFD, &msg, sizeof(msg));
+    memset(readBuffer, 0,sizeof(readBuffer));
     readBytes = read(connFD, readBuffer, sizeof(readBuffer));
     strcpy(newFaculty.f_name, readBuffer);    
     

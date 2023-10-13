@@ -15,7 +15,7 @@ void *handle_conn(void *arg)
    	while(1)
    	{
     	memset(m.buff,0,sizeof(m.buff));
-       	strcpy(m.buff,"------------------------------ Welcome to Academia : Course Registration Portal ----------------------------\n\
+       	strcpy(m.buff,"\n------------------------------ Welcome to Academia : Course Registration Portal ----------------------------\n\
 Login Type (1.Admin  2.Professor  3.Student) \nPlease enter your login choice: ");
        	m.response=1;
        	write(client_socket, &m, sizeof(m));
@@ -43,12 +43,14 @@ Login Type (1.Admin  2.Professor  3.Student) \nPlease enter your login choice: "
                 strcpy(m.buff,"Hello Professor! Press Enter to continue...\n" );
         		m.response=1;
         		write(client_socket, &m, sizeof(m));
+        		faculty_operation_handler(client_socket);
                 break;
             case 3:
             	memset(m.buff,0,sizeof(m.buff));
-                strcpy(m.buff,"Hello Student...\n" );
+                strcpy(m.buff,"Hello Student! Press Enter to continue...\n" );
         		m.response=1;
         		write(client_socket, &m, sizeof(m));
+        		student_operation_handler(client_socket);
                 break;
             default:
                 // Exit

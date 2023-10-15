@@ -81,7 +81,7 @@ Semaphores protection as mutex/ binary locks may be used for Critical Section of
 ## Outputs
 
 - On Running Client and Administrator Login
-# ![InitClient](./Academia/Output/Sreenshot1.png)
+# ![InitClient](./Output/Sreenshot1.png)
 
 - Admin adding students details (Login-id & password auto-generated)
 # ![InitClient](./Output/Sreenshot2.png)

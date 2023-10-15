@@ -20,7 +20,7 @@ gcc client.c -o client
 ./server 
 ```
 
-and client as this:
+and client as shown below:
 
 ```
 ./client

@@ -1,16 +1,13 @@
+bool change_faculty_password(int connFD);
+bool change_student_password(int connFD);
+
+//Changing the faculty account passowrd and updating them in their records
 bool change_faculty_password(int connFD)
 {
     ssize_t readBytes, writeBytes;
     char readBuffer[1024];
     struct message msg;
     char newPassword[20];
-
-     /*
-    struct sembuf semOp; 
-    semOp.sem_num = 0;
-    semOp.sem_flg = SEM_UNDO;  
-    semOp.sem_op = -1;
-    semop(semid, &semOp, 1);*/
     
    	memset(msg.buff, 0,sizeof(msg.buff));
     strcpy(msg.buff, "Enter current password: ");
@@ -33,9 +30,7 @@ bool change_faculty_password(int connFD)
         int facfd = open("./records/faculty", O_WRONLY);
         if (facfd == -1)
         {
-            perror("Error opening faculty file!");               
-			//semOp.sem_op = 1;
-            //semop(semid, &semOp, 1);  
+            perror("Error opening faculty file!");                
             return false;
         }
         //offset check
@@ -44,8 +39,6 @@ bool change_faculty_password(int connFD)
         if (offset == -1 || end<=offset)
         {
         	perror("Error seeking to the faculty record!");
-            //semOp.sem_op = 1;
-            //semop(semid, &semOp, 1);  
             return false;
         }
 
@@ -60,8 +53,6 @@ bool change_faculty_password(int connFD)
         if (lockingStatus == -1)
         {
         	perror("Error obtaining write lock on faculty record!");
-            //semOp.sem_op = 1;
-            //semop(semid, &semOp, 1);  
             return false;
          }
 		writeBytes = write(facfd, &login_fac, sizeof(struct faculty));
@@ -73,8 +64,6 @@ bool change_faculty_password(int connFD)
         strcpy(msg.buff,"Password changed successfully...!!\n" );
         msg.response=0;
         write(connFD, &msg, sizeof(msg));
-        //semOp.sem_op = 1;
-        //semop(semid, &semOp, 1);
         return true;       
     }
     else
@@ -85,8 +74,6 @@ bool change_faculty_password(int connFD)
         write(connFD, &msg, sizeof(msg));
        
     } 
-    //semOp.sem_op = 1;
-    //semop(semid, &semOp, 1);
     return false;
 }
 
@@ -96,21 +83,13 @@ bool change_faculty_password(int connFD)
 
 
 
-
-
+//Changing the student account passowrd and updating them in their records
 bool change_student_password(int connFD)
 {
     ssize_t readBytes, writeBytes;
     char readBuffer[1024];
     struct message msg;
     char newPassword[20];
-
-     /*
-    struct sembuf semOp; 
-    semOp.sem_num = 0;
-    semOp.sem_flg = SEM_UNDO;  
-    semOp.sem_op = -1;
-    semop(semid, &semOp, 1);*/
     
    	memset(msg.buff, 0,sizeof(msg.buff));
     strcpy(msg.buff, "Enter current password: ");
@@ -133,9 +112,7 @@ bool change_student_password(int connFD)
         int studfd = open("./records/student", O_WRONLY);
         if (studfd == -1)
         {
-            perror("Error opening student file!");               
-			//semOp.sem_op = 1;
-            //semop(semid, &semOp, 1);  
+            perror("Error opening student file!");                
             return false;
         }
         //offset check
@@ -144,8 +121,6 @@ bool change_student_password(int connFD)
         if (offset == -1 || end<=offset)
         {
         	perror("Error seeking to the student record!");
-            //semOp.sem_op = 1;
-            //semop(semid, &semOp, 1);  
             return false;
         }
 
@@ -160,8 +135,6 @@ bool change_student_password(int connFD)
         if (lockingStatus == -1)
         {
         	perror("Error obtaining write lock on student record!");
-            //semOp.sem_op = 1;
-            //semop(semid, &semOp, 1);  
             return false;
          }
 		writeBytes = write(studfd, &login_stud, sizeof(struct student));
@@ -173,8 +146,6 @@ bool change_student_password(int connFD)
         strcpy(msg.buff,"Password changed successfully...!!\n" );
         msg.response=0;
         write(connFD, &msg, sizeof(msg));
-        //semOp.sem_op = 1;
-        //semop(semid, &semOp, 1);
         return true;       
     }
     else
@@ -185,7 +156,5 @@ bool change_student_password(int connFD)
         write(connFD, &msg, sizeof(msg));
        
     } 
-    //semOp.sem_op = 1;
-    //semop(semid, &semOp, 1);
     return false;
 }

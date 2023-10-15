@@ -81,59 +81,60 @@ Semaphores protection as mutex/ binary locks may be used for Critical Section of
 ## Outputs
 
 - On Running Client and Administrator Login
-# ![InitClient](./Outputs/Sreenshot1.png)
+# ![InitClient](./Output/Sreenshot1.png)
 
 - Admin adding students details (Login-id & password auto-generated)
-# ![InitClient](./Outputs/Sreenshot2.png)
+# ![InitClient](./Output/Sreenshot2.png)
 
 - Admin displaying students details (Password not shown, everything else is displayed)
-# ![InitClient](./Outputs/Sreenshot3.png)
+# ![InitClient](./Output/Sreenshot3.png)
 
 - Admin trying to display invalid students id (Invalid Input Handled)
-# ![InitClient](./Outputs/Sreenshot4.png)
+# ![InitClient](./Output/Sreenshot4.png)
 
 - Admin adding two faculties and their details (Login-id & password auto-generated)
-# ![InitClient](./Outputs/Sreenshot5.png)
+# ![InitClient](./Output/Sreenshot5.png)
 
 - Admin viewing faculty details by their id 
-# ![InitClient](./Outputs/Sreenshot6.png)
+# ![InitClient](./Output/Sreenshot6.png)
 
 - Admin updating the students details
-# ![InitClient](./Outputs/Sreenshot7.png)
+# ![InitClient](./Output/Sreenshot7.png)
 
 - Admin blocking the specific student and checking its blocked
-# ![InitClient](./Outputs/Sreenshot8.png)
+# ![InitClient](./Output/Sreenshot8.png)
 
 - Admin activating the activated student and blocked student
-# ![InitClient](./Outputs/Sreenshot9.png)
+# ![InitClient](./Output/Sreenshot9.png)
 
 - Professor logs in with given details and changes the password
-# ![InitClient](./Outputs/Sreenshot10.png)
+# ![InitClient](./Output/Sreenshot10.png)
 
 - Faculty adding 2 courses and displaying their details
-# ![InitClient](./Outputs/Sreenshot11.png)
+# ![InitClient](./Output/Sreenshot11.png)
 
 - Faculty updating his courses and displaying their details
-# ![InitClient](./Outputs/Sreenshot12.png)
+# ![InitClient](./Output/Sreenshot12.png)
 
 - Student logs in with given details and view all the courses
 - He/She then enrolls for a course in the given list
 - Available seats for the course decreases as the student enrolls in that course
-# ![InitClient](./Outputs/Sreenshot13.png)
+# ![InitClient](./Output/Sreenshot13.png)
 
 - Student enrolls for two course of different professors from the given list
 - Available seats for the course decreases as the student enrolls in that course
-# ![InitClient](./Outputs/Sreenshot14.png)
+# ![InitClient](./Output/Sreenshot14.png)
 
 - Student views the courses he/she enrolls in and also change the password
-# ![InitClient](./Outputs/Sreenshot15.png)
+# ![InitClient](./Output/Sreenshot15.png)
 
 - Student dropping the course and displaying the updated list of enrolled courses.
-# ![InitClient](./Outputs/Sreenshot16.png)
+# ![InitClient](./Output/Sreenshot16.png)
 
 
 <br> 
 <i>Report by, </i> <br/>
 Bhumika Jindal <br/>
-MTech CSE [MT2023005] <br/>
+MT2023005 <br/>
+MTech CSE <br/>
 International Institute of Information Technology Bangalore <br/>

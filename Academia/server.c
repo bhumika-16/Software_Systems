@@ -63,6 +63,7 @@ Login Type (1.Admin  2.Professor  3.Student) \nPlease enter your login choice: "
         }
     }
     printf("Terminating connection to client!\n");
+
     close(client_socket);
     pthread_exit(NULL);   
 }
@@ -98,7 +99,7 @@ int main() {
     }
 
     printf("Server listening on port %d...\n", PORT);
-
+    
     while (1) {
         // Accept a client connection
         client_socket = accept(server_socket, (struct sockaddr *)&client_addr, &client_addr_len);

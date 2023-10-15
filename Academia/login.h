@@ -1,8 +1,8 @@
+//Handles the account, its type (admin/faculty/student), checks if the user is the right person by authentication and takes a reference of the current user
 bool login_handler(bool isAdmin, bool isFaculty, int connFD, struct faculty *ptrTofID, struct student *ptrTosID)
 {    
     ssize_t readBytes, writeBytes;            
     char readBuffer[1024];
-    //char writeBuffer[1000]; 
     struct message msg;
     char tempBuffer[1024];
     struct faculty f;
@@ -59,46 +59,8 @@ bool login_handler(bool isAdmin, bool isFaculty, int connFD, struct faculty *ptr
         	int lockingStatus = fcntl(facfd, F_SETLKW, &readlock);           
             readBytes = read(facfd, &f, sizeof(struct faculty));
             readlock.l_type = F_UNLCK;
-            fcntl(facfd, F_SETLK, &readlock);
+            fcntl(facfd, F_SETLK, &readlock);            
             
-            /*
-            key_t key3 = ftok("./records/faculty", f.f_id); 
-		    int semctlStatus;
-		    struct sembuf arg3, semOp3;
-		    int semid_faculty = semget(key3, 1, 0); 
-		    if (semid_faculty == -1)
-		    {
-		        semid_faculty = semget(key3, 1, IPC_CREAT | 0744); 
-		        if (semid_faculty == -1)
-		        {
-		            perror("Error while creating semaphore!");
-		            exit(1);
-		        }
-		        arg3.val = 1; 
-		        semctlStatus = semctl(semid_faculty, 0, SETVAL, arg3);
-		        if (semctlStatus == -1)
-		        {
-		            perror("Error while initializing a binary sempahore!");
-		            _exit(1);
-		        }
-		    }
-		    
-		    if (strcmp(f.f_login_id, readBuffer) == 0)
-		    {   
-		    	if ((semctl(semid_faculty,0,GETVAL))<=0 )
-		        { 
-		        	strcpy(msg.buff, "User already logged in some other device!!\nReopen the application....\n");
-		        	msg.response=0;		        
-		        	write(connFD, &msg, sizeof(msg));
-		        }
-		        else{
-		            semOp3.sem_num = 0;
-		            semOp3.sem_flg = SEM_UNDO;
-		            semOp3.sem_op = -1;
-		            semop(semid_faculty, &semOp3, 1); 	            
-		            userFound = true;
-		       }		        
-		    }*/
 		    if(strcmp(f.f_login_id, readBuffer) == 0)
 		    	userFound = true;
 		    close(facfd);
@@ -198,8 +160,6 @@ bool login_handler(bool isAdmin, bool isFaculty, int connFD, struct faculty *ptr
         strcpy(msg.buff,"Invalid password for the given id!! Reopen the applicaton....\n" );
         msg.response=0;
         write(connFD, &msg, sizeof(msg));
-        //semOp3.sem_op = 1;
-        //semop(semid_faculty, &semOp3, 1);
     }
     else
     {

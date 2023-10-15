@@ -4,11 +4,13 @@
 #include "edit_details.h"
 #include "login.h"
 #include "password.h"
-#include "ad.h"
-#include "get.h"
+#include "modify.h"
+#include "courses.h"
 
+//Handles the Admin Interface
 bool admin_operation_handler(int connFD)
 {
+	//Check if the user is the right person to login
     if (login_handler(true, false, connFD, NULL, NULL))
     {
         ssize_t writeBytes, readBytes;  
@@ -19,6 +21,7 @@ bool admin_operation_handler(int connFD)
         msg.response=0;
         write(connFD, &msg, sizeof(msg));
         
+        //Displaying the menu displaying administrator operations
         while (1)
         {
             memset(msg.buff,0,sizeof(msg.buff));
@@ -77,7 +80,7 @@ Enter your choice: \n");
 
 
 
-
+//Handles the professor interface
 bool faculty_operation_handler(int connFD)
 {
     if (login_handler(false, true, connFD, &login_fac, NULL))
@@ -110,14 +113,13 @@ bool faculty_operation_handler(int connFD)
                 break;
             case 2:
                 add_course(connFD);
-                break;
-            /*       
+                break;                 
             case 3:
-                add_faculty(connFD);
+                remove_course(connFD);
                 break;
             case 4:
-                get_faculty_details(connFD,-1);
-                break;*/
+                modify_course_details(connFD);
+                break;
             case 5:
                 change_faculty_password(connFD);
                 break;
@@ -142,7 +144,7 @@ bool faculty_operation_handler(int connFD)
 
 
 
-
+//Handles the student interface
 bool student_operation_handler(int connFD)
 {
     if (login_handler(false, false, connFD, NULL, &login_stud))
@@ -170,19 +172,18 @@ bool student_operation_handler(int connFD)
             int choice = atoi(buff);
             switch (choice)
             {
-            /*
             case 1:
-                add_student(connFD);
-                break;
+                view_all_courses(connFD);
+                break;            
             case 2:
-                get_student_details(connFD,-1);
-                break;       
+                enroll_course(connFD);
+                break;      
             case 3:
-                add_faculty(connFD);
+                drop_course(connFD);
                 break;
             case 4:
-                get_faculty_details(connFD,-1);
-                break;*/
+                view_enroll_course(connFD);
+                break;
             case 5:
                 change_student_password(connFD);
                 break;

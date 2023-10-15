@@ -5,7 +5,7 @@
 #include <pthread.h>
 #include <arpa/inet.h>
 #include <signal.h>
-#include <stdbool.h> // Include this header for boolean support
+#include <stdbool.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <ctype.h>
@@ -29,7 +29,6 @@ struct admin {
     char password[20];
     char email[20];
    	char phone_no[15];
-    // You can add more admin-specific fields here if needed
 };
 
 // Structure for a faculty member
@@ -44,11 +43,7 @@ struct faculty {
    	char f_qual[50];
    	float f_exp;
     bool f_login_status;
-    // Additional fields for faculty, e.g., faculty ID
     int f_id;
-    // Information about the courses a faculty member is responsible for
-    //struct course assigned_courses[10]; // Assuming a faculty member can be assigned up to 10 courses
-    int num_assigned_courses; // Number of courses assigned
 };
 
 // Structure for a course
@@ -59,7 +54,6 @@ struct course {
     int total_seats;
     int avail_seats;
     char cfac_id[20];
-    //struct faculty c_faculty;
 };
 
 // Structure for a student
@@ -75,10 +69,15 @@ struct student {
     bool s_login_status;
     bool s_active_status;
     int s_id;
-    // Information about the courses a student is registered for
-    struct course registered_courses[10]; // Assuming a student can register for up to 10 courses
-    int num_reg_courses; // Number of courses registered
+};
+
+struct enroll
+{
+	char stud_login_id[20];
+	char course_code[20];
+	bool active_status;
 };
 
 struct faculty login_fac;
 struct student login_stud;
+

@@ -1,3 +1,8 @@
+bool modify_student_details(int connFD);
+bool modify_faculty_details(int connFD);
+bool activate_student(int connFD,int status);
+
+//Admin modifies student details
 bool modify_student_details(int connFD)
 {
     ssize_t readBytes, writeBytes;
@@ -206,7 +211,7 @@ bool modify_student_details(int connFD)
 
 
 
-
+//Admin modifying faculty details
 bool modify_faculty_details(int connFD)
 {
     ssize_t readBytes, writeBytes;
@@ -442,7 +447,7 @@ bool modify_faculty_details(int connFD)
     return true;
 }
 
-
+//Activate or block a student
 bool activate_student(int connFD,int status)
 {
 	ssize_t readBytes, writeBytes;

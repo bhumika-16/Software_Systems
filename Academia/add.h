@@ -1,3 +1,11 @@
+int is_numeric(const char *str);
+bool is_valid_email(const char *email);
+bool is_valid_phone_number(const char *phoneNumber);
+int add_student(int connFD);
+int add_faculty(int connFD);
+int add_course(int connFD);
+
+//Checking if a string is numeric
 int is_numeric(const char *str) 
 {
     // Function to check if a string contains only numeric digits
@@ -10,6 +18,7 @@ int is_numeric(const char *str)
     return 1; // All characters are numeric
 }
 
+//Checking if a mail is a vail email
 bool is_valid_email(const char *email) {
     int atCount = 0;
     int dotCount = 0;
@@ -33,7 +42,7 @@ bool is_valid_email(const char *email) {
     }
 }
 
-
+//Checking if valid contact no.
 bool is_valid_phone_number(const char *phoneNumber) {
     // Check if the phone number contains only digits
     for (int i = 0; i < strlen(phoneNumber); i++) {
@@ -52,12 +61,17 @@ bool is_valid_phone_number(const char *phoneNumber) {
 
 
 
+
+
+//Admin adds student in student file
 int add_student(int connFD)
 {
     ssize_t readBytes, writeBytes;
     char readBuffer[1024]; 
     struct message msg;
     struct student newStudent, prevStudent;
+    
+    //Fetvhing the last student id to get next serial id
     int studfd = open("./records/student", O_RDONLY);
     if (studfd == -1 && errno == ENOENT)
         newStudent.s_id = 1;
@@ -89,7 +103,7 @@ int add_student(int connFD)
 		newStudent.s_id = prevStudent.s_id + 1;
     }
 
-    
+    //Input the details of the new student and handle the possible errors
     memset(msg.buff, 0,sizeof(msg.buff));
     strcpy(msg.buff, "\n---------Enter the details of the new student--------\n");
 	strcat(msg.buff, "Enter student's name: ");
@@ -185,6 +199,7 @@ int add_student(int connFD)
         return -1;
     }
     
+    //Generating a unique login_id and default password
     newStudent.s_age = sAge;
     newStudent.s_login_status = 0;
 	newStudent.s_active_status = 1;	
@@ -195,8 +210,8 @@ int add_student(int connFD)
     strcat(newStudent.s_login_id, msg.buff);    
     strcpy(newStudent.s_password, "pass_");
     strcat(newStudent.s_password, newStudent.s_login_id);
-    newStudent.num_reg_courses = 0;
     
+    //Appending the new student details in the student record file
     studfd = open("./records/student", O_CREAT | O_APPEND | O_WRONLY, S_IRWXU);
     if (studfd == -1)
     {
@@ -220,12 +235,20 @@ int add_student(int connFD)
 }
 
 
+
+
+
+
+
+
+//Admin add faculty into faculty database
 int add_faculty(int connFD)
 {
     ssize_t readBytes, writeBytes;
     char readBuffer[1024]; 
     struct message msg;
     struct faculty newFaculty, prevFaculty;
+    //Seeking the last faculty id
     int facfd = open("./records/faculty", O_RDONLY);
     if (facfd == -1 && errno == ENOENT)
         newFaculty.f_id = 1;
@@ -257,7 +280,7 @@ int add_faculty(int connFD)
 		newFaculty.f_id = prevFaculty.f_id + 1;
     }
 
-    
+    //Take input of faculty details and add them to the faculty database file
     memset(msg.buff, 0,sizeof(msg.buff));
     strcpy(msg.buff, "\n---------Enter the details of the new faculty--------\n");
 	strcat(msg.buff, "Enter faculty's name: ");
@@ -376,8 +399,8 @@ int add_faculty(int connFD)
     strcat(newFaculty.f_login_id, msg.buff);    
     strcpy(newFaculty.f_password, "pass_");
     strcat(newFaculty.f_password, newFaculty.f_login_id);
-    newFaculty.num_assigned_courses = 0;
     
+    //Appending the new faculty data to the faculty file
     facfd = open("./records/faculty", O_CREAT | O_APPEND | O_WRONLY, S_IRWXU);
     if (facfd == -1)
     {
@@ -398,4 +421,97 @@ int add_faculty(int connFD)
     msg.response=0;
     write(connFD, &msg, sizeof(msg));
     return newFaculty.f_id;
+}
+
+
+
+
+
+
+//Professor adds only his/her course
+int add_course(int connFD)
+{
+    ssize_t readBytes, writeBytes;
+    char readBuffer[1024]; 
+    struct message msg;    
+    struct course newCourse, prevCourse;
+    
+    //Input details of new Course and check invalid data
+    memset(msg.buff, 0,sizeof(msg.buff));
+    strcpy(msg.buff, "\n---------Enter the details of your new course--------\n");
+	strcat(msg.buff, "Enter course's name: ");
+    msg.response=1;
+    write(connFD, &msg, sizeof(msg));
+    memset(readBuffer, 0,sizeof(readBuffer));
+    readBytes = read(connFD, readBuffer, sizeof(readBuffer));
+    strcpy(newCourse.c_name, readBuffer);    
+    
+    memset(msg.buff, 0,sizeof(msg.buff));
+    strcpy(msg.buff,"Enter course's code: ");
+    msg.response=1;
+    write(connFD, &msg, sizeof(msg));
+    memset(readBuffer, 0,sizeof(readBuffer));
+    readBytes = read(connFD, readBuffer, sizeof(readBuffer));
+   	strcpy(newCourse.c_code, readBuffer); 
+
+    memset(msg.buff, 0,sizeof(msg.buff));
+    strcpy(msg.buff,"Enter course's credit: ");
+  	msg.response=1;
+    write(connFD, &msg, sizeof(msg));    
+    memset(readBuffer, 0,sizeof(readBuffer));
+    readBytes = read(connFD, readBuffer, sizeof(readBuffer));
+    int cred;
+    if (is_numeric(readBuffer))
+    	cred = atoi(readBuffer); // Now, fAge contains the integer value
+	else
+    	cred=-1;     
+    if (cred <= 0)
+    {
+        memset(msg.buff, 0,sizeof(msg.buff));
+        strcpy(msg.buff, "Invalid Credit!! Redirecting to the main menu...!\n");      
+        msg.response=0;
+        write(connFD, &msg, sizeof(msg));       
+        return -1;
+    }
+    
+    memset(msg.buff, 0,sizeof(msg.buff));
+    strcpy(msg.buff,"Enter course's total seats: ");
+  	msg.response=1;
+    write(connFD, &msg, sizeof(msg));    
+    memset(readBuffer, 0,sizeof(readBuffer));
+    readBytes = read(connFD, readBuffer, sizeof(readBuffer));
+    int tot_seats;
+    if (is_numeric(readBuffer))
+    	tot_seats = atoi(readBuffer); 
+	else
+    	tot_seats = -1;     
+    if (tot_seats <= 0)
+    { 
+        memset(msg.buff, 0,sizeof(msg.buff));
+        strcpy(msg.buff, "Invalid No. of Seats!! Redirecting to the main menu...!\n");      
+        msg.response=0;
+        write(connFD, &msg, sizeof(msg));       
+        return -1;
+    }
+    
+    newCourse.c_credit = cred;
+    newCourse.total_seats = tot_seats;
+    newCourse.avail_seats = tot_seats;
+    strcpy(newCourse.cfac_id,login_fac.f_login_id);
+    
+    //Entering the new course details to the existing courses file
+    int course_fd = open("./records/courses", O_CREAT | O_APPEND | O_WRONLY, S_IRWXU);
+    if (course_fd == -1)
+    {
+        perror("Error while creating / opening faculty file!");
+        return -1;
+    }
+    writeBytes = write(course_fd, &newCourse, sizeof(newCourse));  
+    close(course_fd);
+  
+    memset(msg.buff, 0,sizeof(msg.buff));    
+    strcpy(msg.buff, "Course added successfully...!!\n");     
+    msg.response=0;
+    write(connFD, &msg, sizeof(msg));
+    return 0;
 }

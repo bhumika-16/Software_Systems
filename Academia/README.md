@@ -81,55 +81,55 @@ Semaphores protection as mutex/ binary locks may be used for Critical Section of
 ## Outputs
 
 - On Running Client and Administrator Login
-# ![InitClient](./Output/Sreenshot1.png)
+# ![1](./Output/Sreenshot1.png)
 
 - Admin adding students details (Login-id & password auto-generated)
-# ![InitClient](./Output/Sreenshot2.png)
+# ![2](./Output/Sreenshot2.png)
 
 - Admin displaying students details (Password not shown, everything else is displayed)
-# ![InitClient](./Output/Sreenshot3.png)
+# ![3](./Output/Sreenshot3.png)
 
 - Admin trying to display invalid students id (Invalid Input Handled)
-# ![InitClient](./Output/Sreenshot4.png)
+# ![4](./Output/Sreenshot4.png)
 
 - Admin adding two faculties and their details (Login-id & password auto-generated)
-# ![InitClient](./Output/Sreenshot5.png)
+# ![5](./Output/Sreenshot5.png)
 
 - Admin viewing faculty details by their id 
-# ![InitClient](./Output/Sreenshot6.png)
+# ![6](./Output/Sreenshot6.png)
 
 - Admin updating the students details
-# ![InitClient](./Output/Sreenshot7.png)
+# ![7](./Output/Sreenshot7.png)
 
 - Admin blocking the specific student and checking its blocked
-# ![InitClient](./Output/Sreenshot8.png)
+# ![8](./Output/Sreenshot8.png)
 
 - Admin activating the activated student and blocked student
-# ![InitClient](./Output/Sreenshot9.png)
+# ![9](./Output/Sreenshot9.png)
 
 - Professor logs in with given details and changes the password
-# ![InitClient](./Output/Sreenshot10.png)
+# ![10](./Output/Sreenshot10.png)
 
 - Faculty adding 2 courses and displaying their details
-# ![InitClient](./Output/Sreenshot11.png)
+# ![11](./Output/Sreenshot11.png)
 
 - Faculty updating his courses and displaying their details
-# ![InitClient](./Output/Sreenshot12.png)
+# ![12](./Output/Sreenshot12.png)
 
 - Student logs in with given details and view all the courses
 - He/She then enrolls for a course in the given list
 - Available seats for the course decreases as the student enrolls in that course
-# ![InitClient](./Output/Sreenshot13.png)
+# ![13](./Output/Sreenshot13.png)
 
 - Student enrolls for two course of different professors from the given list
 - Available seats for the course decreases as the student enrolls in that course
-# ![InitClient](./Output/Sreenshot14.png)
+# ![14](./Output/Sreenshot14.png)
 
 - Student views the courses he/she enrolls in and also change the password
-# ![InitClient](./Output/Sreenshot15.png)
+# ![15](./Output/Sreenshot15.png)
 
 - Student dropping the course and displaying the updated list of enrolled courses.
-# ![InitClient](./Output/Sreenshot16.png)
+# ![16](./Output/Sreenshot16.png)
 
 
 <br> 
